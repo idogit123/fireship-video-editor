@@ -52,6 +52,12 @@
       {
         "command": "fireship-video-editor.prevFrame",
         "title": "Fireship: Previous Frame"
+      },
+      {
+        "command": "fireship-video-editor.deleteFrame",
+        "title": "Fireship: Delete Frame",
+        "shortTitle": "Delete",
+        "icon": "media/delete.png"
       }
     ],
     "viewsContainers": {
@@ -90,6 +96,13 @@
           "command": "fireship-video-editor.loadClip",
           "when": "view == fireship-video-editor.clipView",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "fireship-video-editor.deleteFrame",
+          "when": "view == fireship-video-editor.clipView",
+          "group": "inline"
         }
       ]
     },

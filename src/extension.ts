@@ -90,6 +90,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 		vscode.commands.registerCommand('fireship-video-editor.prevFrame', () => {
 			currentClip.prevFrame()
+		}),
+
+		vscode.commands.registerCommand('fireship-video-editor.deleteFrame', (deleteFrame: Frame) => {
+			const deleteFrameIndex = currentClip.frames.indexOf(deleteFrame)
+			currentClip.frames.splice(deleteFrameIndex, 1)
+
+			currentClip.changeClipEventEmitter.fire()
 		})
 	);
 
