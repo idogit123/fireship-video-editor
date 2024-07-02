@@ -9,13 +9,48 @@
   "categories": [
     "Other"
   ],
+  "publisher": "IdoVitmanZilber",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "fireship-video-editor.helloWorld",
-        "title": "Hello World"
+        "command": "fireship-video-editor.newClip",
+        "title": "Fireship: New Clip",
+        "icon": "media/new-document.png",
+        "shortTitle": "New"
+      },
+      {
+        "command": "fireship-video-editor.saveClip",
+        "title": "Fireship: Save Clip",
+        "icon": "media/save.png",
+        "shortTitle": "Save"
+      },
+      {
+        "command": "fireship-video-editor.loadClip",
+        "title": "Fireship: Load Clip",
+        "icon": "media/load.png",
+        "shortTitle": "Load"
+      },
+      {
+        "command": "fireship-video-editor.saveFrameLast",
+        "title": "Fireship: Save Frame First"
+      },
+      {
+        "command": "fireship-video-editor.saveFrameFirst",
+        "title": "Fireship: Save Frame Last"
+      },
+      {
+        "command": "fireship-video-editor.showFrame",
+        "title": "Fireship: Show Frame"
+      },
+      {
+        "command": "fireship-video-editor.nextFrame",
+        "title": "Fireship: Next Frame"
+      },
+      {
+        "command": "fireship-video-editor.prevFrame",
+        "title": "Fireship: Previous Frame"
       }
     ],
     "viewsContainers": {
@@ -23,7 +58,7 @@
         {
           "id": "fireship",
           "title": "Fireship",
-          "icon": "media/view-container-logo.png"
+          "icon": "media/fire.png"
         }
       ]
     },
@@ -32,13 +67,53 @@
         {
           "type": "tree",
           "id": "fireship-video-editor.clipView",
-          "name": "Clip View",
+          "name": "",
           "initialSize": 1,
-          "visibility": "visible",
-          "icon": "🎥"
+          "visibility": "visible"
         }
       ]
-    }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "fireship-video-editor.newClip",
+          "when": "view == fireship-video-editor.clipView",
+          "group": "navigation"
+        },
+        {
+          "command": "fireship-video-editor.saveClip",
+          "when": "view == fireship-video-editor.clipView",
+          "group": "navigation"
+        },
+        {
+          "command": "fireship-video-editor.loadClip",
+          "when": "view == fireship-video-editor.clipView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "fireship-video-editor.saveFrameLast",
+        "key": "home",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "fireship-video-editor.saveFrameFirst",
+        "key": "end",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "fireship-video-editor.nextFrame",
+        "key": "ctrl+up",
+        "when": "editorIsOpen && view.fireship-video-editor.clipView.visible"
+      },
+      {
+        "command": "fireship-video-editor.prevFrame",
+        "key": "ctrl+down",
+        "when": "editorIsOpen && view.fireship-video-editor.clipView.visible"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
