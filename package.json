@@ -9,6 +9,7 @@
   "categories": [
     "Other"
   ],
+  "repository": "https://github.com/idogit123/fireship-video-editor.git",
   "publisher": "IdoVitmanZilber",
   "activationEvents": [],
   "main": "./out/extension.js",
