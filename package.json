@@ -2,7 +2,7 @@
   "name": "fireship-video-editor",
   "displayName": "Fireship Video Editor",
   "description": "The extention will allow you to create code videos like fireship.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.90.0"
   },
