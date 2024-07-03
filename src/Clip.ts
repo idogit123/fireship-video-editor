@@ -1,15 +1,23 @@
-import { Event, EventEmitter, ProviderResult, TreeDataProvider, TreeItem, commands } from "vscode";
+import { Event, EventEmitter, ProviderResult, TreeDataProvider, TreeItem, commands, TreeView} from "vscode";
+import { window } from "vscode"
 import { Frame } from "./Frame";
 
 export class Clip implements TreeDataProvider<Frame> {
     frames: Frame[]
     changeClipEventEmitter = new EventEmitter<void | Frame | Frame[] | null | undefined>()
     currentFrame: number
+    view: TreeView<Frame>
 
     constructor(clip: Frame[])
     {
         this.frames = clip
         this.currentFrame = 0
+        this.view = window.createTreeView<Frame>(
+            'fireship-video-editor.clipView',
+            {
+                treeDataProvider: this,
+            }
+        )
     }
 
     addFrame(newFrame: Frame, isSaveFirst: boolean)
@@ -54,6 +62,8 @@ export class Clip implements TreeDataProvider<Frame> {
         if (this.frames.length == 0)
             return;
 
+        console.log('update')
+        this.view.reveal(this.frames[this.currentFrame], { focus: true })
         commands.executeCommand('fireship-video-editor.showFrame', this.frames[this.currentFrame])
     }
 
@@ -73,5 +83,10 @@ export class Clip implements TreeDataProvider<Frame> {
 
         this.currentFrame -= 1
         this.showFrame()
+    }
+
+    getParent(element: Frame): ProviderResult<Frame> 
+    {
+        return undefined    
     }
 }

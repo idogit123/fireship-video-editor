@@ -35,16 +35,6 @@ export function activate(context: vscode.ExtensionContext) {
 		}),
 
 		vscode.commands.registerCommand('fireship-video-editor.saveClip', async () => {
-			const saveDir = await vscode.window.showOpenDialog({
-				"title": "Pick a directory",
-				"openLabel": "Select",
-				"canSelectFiles": false,
-				"canSelectFolders": true,
-				"canSelectMany": false
-			})
-			if (!saveDir)
-				return;
-
 			const clipName = await vscode.window.showInputBox({
 				"title": "Name the clip",
 				"validateInput": (value) => value.length > 0 ? null : "Name cant be empty!",
@@ -52,17 +42,23 @@ export function activate(context: vscode.ExtensionContext) {
 				"ignoreFocusOut": true
 			}) ?? "New Clip"
 
-			const clipPath = `${saveDir[0].fsPath}\\${clipName}.json`
-
 			try {
-				writeFileSync(clipPath, JSON.stringify(currentClip.toJSON()), { flag: "w+" })
-				// w+ flag ensures that the file is created if it doesn’t exist, 
-				// and if it does, it will be truncated (emptied) before writing new data to it.
+				if (vscode.workspace.workspaceFolders == undefined)
+					throw new Error('No workspace is open')
+
+				const workspaceFolderPath = vscode.workspace.workspaceFolders[0].uri.fsPath
+				const clipPath = vscode.Uri.file(`${workspaceFolderPath}/clips/${clipName}.json`)
+
+				await vscode.workspace.fs.writeFile(
+					clipPath,
+					Buffer.from(JSON.stringify(currentClip.toJSON()))
+				)
 
 				vscode.window.showInformationMessage(`Clip: "${clipName}" saved successfuly.`)
 			}
-			catch {
+			catch (error) {
 				vscode.window.showErrorMessage('Error saving clip.')
+				console.error(error as Error)
 			}
 		}),
 
@@ -96,6 +92,19 @@ export function activate(context: vscode.ExtensionContext) {
 			const deleteFrameIndex = currentClip.frames.indexOf(deleteFrame)
 			currentClip.frames.splice(deleteFrameIndex, 1)
 
+			currentClip.changeClipEventEmitter.fire()
+		}),
+
+		vscode.commands.registerCommand('fireship-video-editor.renameFrame', async (frame: Frame) => {
+			const newLabel = await vscode.window.showInputBox({
+				"title": "Label the frame",
+				"validateInput": (value) => value.length > 0 ? null : "Lebel cant be empty!",
+				"placeHolder": frame.label as string,
+				"ignoreFocusOut": true
+			}) ?? frame.label as string
+
+			frame.label = newLabel
+			console.log('update name')
 			currentClip.changeClipEventEmitter.fire()
 		})
 	);
@@ -140,16 +149,8 @@ async function saveFrame(currentClip: Clip, isSaveFirst: boolean)
 		return;	
 	}
 
-	const defaultLabel = `Frame #${currentClip.frames.length + 1}`
-	const frameLabel = await vscode.window.showInputBox({
-		"title": "Label the frame",
-		"validateInput": (value) => value.length > 0 ? null : "Lebel cant be empty!",
-		"placeHolder": defaultLabel,
-		"ignoreFocusOut": true
-	}) ?? defaultLabel
-
 	currentClip.addFrame(
-		new Frame(frameLabel, frameContent),
+		new Frame(`Frame #${currentClip.frames.length + 1}`, frameContent),
 		isSaveFirst
 	)
 }

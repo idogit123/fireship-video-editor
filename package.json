@@ -58,6 +58,12 @@
         "title": "Fireship: Delete Frame",
         "shortTitle": "Delete",
         "icon": "media/delete.png"
+      },
+      {
+        "command": "fireship-video-editor.renameFrame",
+        "title": "Fireship: Rename Frame",
+        "shortTitle": "Rename",
+        "icon": "media/edit.png"
       }
     ],
     "viewsContainers": {
@@ -101,6 +107,11 @@
       "view/item/context": [
         {
           "command": "fireship-video-editor.deleteFrame",
+          "when": "view == fireship-video-editor.clipView",
+          "group": "inline"
+        },
+        {
+          "command": "fireship-video-editor.renameFrame",
           "when": "view == fireship-video-editor.clipView",
           "group": "inline"
         }
